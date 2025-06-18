@@ -1,0 +1,89 @@
+@model IEnumerable<AspNetPostgresAuth.Models.Post>
+
+@{
+    ViewData["Title"] = "포스트 목록";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>@ViewData["Title"]</h2>
+        @if (User.Identity.IsAuthenticated)
+        {
+            <a asp-action="Create" class="btn btn-primary">
+                <i class="fas fa-plus"></i> 새 포스트 작성
+            </a>
+        }
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (Model.Any())
+    {
+        <div class="row">
+            @foreach (var post in Model)
+            {
+                <div class="col-md-12 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a asp-action="Details" asp-route-id="@post.Id" class="text-decoration-none">
+                                    @post.Title
+                                </a>
+                            </h5>
+                            <p class="card-text">
+                                @{
+                                    var content = post.Content.Length > 200 ? 
+                                        post.Content.Substring(0, 200) + "..." : 
+                                        post.Content;
+                                }
+                                @content
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <small class="text-muted">
+                                        작성자: @(post.Author?.UserName ?? "알 수 없음") | 
+                                        작성일: @post.CreatedAt.ToString("yyyy-MM-dd HH:mm")
+                                        @if (post.UpdatedAt != post.CreatedAt)
+                                        {
+                                            <span> (수정됨: @post.UpdatedAt.ToString("yyyy-MM-dd HH:mm"))</span>
+                                        }
+                                    </small>
+                                </div>
+                                <div>
+                                    <a asp-action="Details" asp-route-id="@post.Id" class="btn btn-sm btn-outline-primary">상세보기</a>
+                                    @if (User.Identity.IsAuthenticated && post.AuthorId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
+                                    {
+                                        <a asp-action="Edit" asp-route-id="@post.Id" class="btn btn-sm btn-outline-secondary">수정</a>
+                                        <a asp-action="Delete" asp-route-id="@post.Id" class="btn btn-sm btn-outline-danger">삭제</a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5">
+            <h4 class="text-muted">아직 작성된 포스트가 없습니다.</h4>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <p class="text-muted">첫 번째 포스트를 작성해보세요!</p>
+                <a asp-action="Create" class="btn btn-primary mt-3">포스트 작성하기</a>
+            }
+            else
+            {
+                <p class="text-muted">포스트를 작성하려면 로그인이 필요합니다.</p>
+                <a asp-controller="Account" asp-action="Login" class="btn btn-primary mt-3">로그인</a>
+            }
+        </div>
+    }
+</div> 

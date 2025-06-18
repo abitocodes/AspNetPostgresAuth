@@ -1,0 +1,34 @@
+@model AspNetPostgresAuth.Models.EditProfileViewModel
+
+
+@{
+    ViewData["Title"] = "이메일 변경";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<!-- 상태 메시지가 있는 경우 출력 -->
+@if (ViewBag.StatusMessage != null)
+{
+    <div class="alert alert-info">
+        @ViewBag.StatusMessage
+    </div>
+}
+
+<form asp-action="EditProfile" method="post" class="mt-4">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <!-- 현재 이메일 표시 (읽기 전용) -->
+    <div class="form-group mb-3">
+        <label asp-for="NewEmail"></label>
+        <input asp-for="NewEmail" class="form-control" />
+        <span asp-validation-for="NewEmail" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">이메일 변경</button>
+    <a asp-controller="Home" asp-action="Index" class="btn btn-secondary ms-2">취소</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

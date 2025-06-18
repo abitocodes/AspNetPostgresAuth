@@ -1,0 +1,62 @@
+@model AspNetPostgresAuth.Models.Post
+
+@{
+    ViewData["Title"] = "포스트 삭제";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h3 class="mb-0">
+                        <i class="fas fa-exclamation-triangle"></i> @ViewData["Title"]
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <strong>주의!</strong> 이 작업은 되돌릴 수 없습니다. 정말로 이 포스트를 삭제하시겠습니까?
+                    </div>
+
+                    <div class="mb-3">
+                        <h4>@Model.Title</h4>
+                        <hr />
+                        <div class="text-muted mb-2">
+                            <small>
+                                <i class="fas fa-user"></i> 작성자: @(Model.Author?.UserName ?? "알 수 없음") |
+                                <i class="fas fa-calendar"></i> 작성일: @Model.CreatedAt.ToString("yyyy년 MM월 dd일 HH:mm")
+                                @if (Model.UpdatedAt != Model.CreatedAt)
+                                {
+                                    <span> | <i class="fas fa-edit"></i> 수정됨: @Model.UpdatedAt.ToString("yyyy년 MM월 dd일 HH:mm")</span>
+                                }
+                            </small>
+                        </div>
+                        <div class="border rounded p-3 bg-light">
+                            @{
+                                var content = Model.Content.Length > 300 ? 
+                                    Model.Content.Substring(0, 300) + "..." : 
+                                    Model.Content;
+                            }
+                            @Html.Raw(Html.Encode(content).Replace("\n", "<br />"))
+                        </div>
+                    </div>
+
+                    <form asp-action="Delete" method="post">
+                        <input type="hidden" asp-for="Id" />
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a asp-action="Index" class="btn btn-secondary me-md-2">
+                                <i class="fas fa-arrow-left"></i> 취소
+                            </a>
+                            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-primary me-md-2">
+                                <i class="fas fa-eye"></i> 상세보기
+                            </a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash"></i> 삭제하기
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
