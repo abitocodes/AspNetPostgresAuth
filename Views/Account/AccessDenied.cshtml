@@ -1,0 +1,40 @@
+@{
+    ViewData["Title"] = "접근 거부";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-warning">
+                <div class="card-header bg-warning text-dark">
+                    <h3 class="mb-0">
+                        <i class="fas fa-exclamation-triangle"></i> 접근 거부
+                    </h3>
+                </div>
+                <div class="card-body text-center">
+                    <div class="alert alert-warning">
+                        <h4 class="alert-heading">권한이 없습니다!</h4>
+                        <p>이 작업을 수행할 권한이 없습니다.</p>
+                        <hr>
+                        <p class="mb-0">본인이 작성한 포스트만 수정하거나 삭제할 수 있습니다.</p>
+                    </div>
+                    
+                    <div class="mt-4">
+                        @if (!string.IsNullOrEmpty(ViewData["ReturnUrl"]?.ToString()))
+                        {
+                            <a href="@ViewData["ReturnUrl"]" class="btn btn-secondary me-2">
+                                <i class="fas fa-arrow-left"></i> 뒤로 가기
+                            </a>
+                        }
+                        <a asp-controller="Posts" asp-action="Index" class="btn btn-primary">
+                            <i class="fas fa-list"></i> 포스트 목록
+                        </a>
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-primary">
+                            <i class="fas fa-home"></i> 홈으로
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
