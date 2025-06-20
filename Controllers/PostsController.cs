@@ -64,6 +64,7 @@ namespace AspNetPostgresAuth.Controllers
             if (ModelState.IsValid)
             {
                 var user = await _userManager.GetUserAsync(User);
+                Console.WriteLine($"user here!!!: {user.Id}");
                 if (user != null)
                 {
                     // 현재 사용자 정보를 PostgreSQL 세션에 설정
@@ -72,8 +73,7 @@ namespace AspNetPostgresAuth.Controllers
                         user.UserName);
 
                     post.AuthorId = user.Id;
-                    post.CreatedAt = DateTime.UtcNow;
-                    post.UpdatedAt = DateTime.UtcNow;
+                    // CreatedAt과 UpdatedAt은 DB에서 자동으로 설정됨
                     
                     _context.Add(post);
                     await _context.SaveChangesAsync();
@@ -155,7 +155,7 @@ namespace AspNetPostgresAuth.Controllers
                     // 수정 가능한 필드만 업데이트
                     existingPost.Title = post.Title;
                     existingPost.Content = post.Content;
-                    existingPost.UpdatedAt = DateTime.UtcNow;
+                    // UpdatedAt은 DB/SaveChanges에서 자동으로 설정됨
 
                     await _context.SaveChangesAsync();
                     TempData["SuccessMessage"] = "포스트가 성공적으로 수정되었습니다.";
